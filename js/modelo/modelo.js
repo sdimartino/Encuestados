@@ -24,12 +24,22 @@ Modelo.prototype = {
   },
 
   //se agrega una pregunta dado un nombre y sus respuestas
-  agregarPregunta: function(nombre, respuestas) {
-    var id = this.obtenerUltimoId();
-    id++;
-    var nuevaPregunta = {'textoPregunta': nombre, 'id': id, 'cantidadPorRespuesta': respuestas};
-    this.preguntas.push(nuevaPregunta);
-    this.guardar(nuevaPregunta);
+  agregarPregunta: function(nombre, respuestas, idpregunta) {
+    var modo = idpregunta? 'edicion':'alta';
+    if (modo == 'alta'){
+      var id = this.obtenerUltimoId();
+      id++;
+      var nuevaPregunta = {'textoPregunta': nombre, 'id': id, 'cantidadPorRespuesta': respuestas};
+      this.preguntas.push(nuevaPregunta);
+      this.guardar(nuevaPregunta);
+    }
+    else{
+      var preguntaModificada = {'textoPregunta': nombre, 'id': idpregunta, 'cantidadPorRespuesta': respuestas};
+      this.preguntas = this.preguntas.filter(x => x.id == idpregunta);
+      this.preguntas.push(preguntaModificada);
+      this.actualizar(preguntaModificada);
+    }
+    
     this.preguntaAgregada.notificar();
   },
 
@@ -37,6 +47,12 @@ Modelo.prototype = {
   guardar: function(pregunta){
         myStorage.setItem(pregunta.id, JSON.stringify(pregunta));
   },
+
+  actualizar: function(pregunta){
+    myStorage.removeItem(id);
+    myStorage.setItem(pregunta.id, JSON.stringify(pregunta));
+  },
+
   //consulta desde el almacenamiento
   consultar: function(){
     if (myStorage.length > 0 ){
@@ -49,9 +65,9 @@ Modelo.prototype = {
   },
   //borrar almacenamiento
   borrar: function(id){
-     if (id.equal(null) && myStorage.length > 0){
-        for(var i=0; myStorage.length-1; i++){
-          myStorage.removeItem(i);
+     if (!id && myStorage.length > 0){
+        for(var i=0; i <= myStorage.length ; i++){
+          myStorage.removeItem(myStorage.key(i));
         }
      }
      else{
@@ -59,18 +75,18 @@ Modelo.prototype = {
      }
   },
 
-
-
   borrarPregunta: function(id){
     var preguntasfiltradas = this.preguntas.filter(function(obj){
       return obj.id != id;
     });
     this.preguntas = preguntasfiltradas;
+    this.borrar(id);
     this.preguntaBorrada.notificar();
   },
 
   borrarTodaPregunta: function(){
     this.preguntas =[];
+    this.borrarPregunta();
     this.todasPreguntasBorradas.notificar();
   }
 

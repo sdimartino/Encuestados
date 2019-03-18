@@ -28,29 +28,13 @@ $('#localStorageForm')
       }
     }
   })
-  .on('click', '.botonAgregarRespuesta', function() {
-    var $template = $('#optionTemplate'),
-      $clone = $template
-      .clone()
-      .removeClass('hide')
-      .attr('id', "respuesta" + this.cantRespuestas)
-      .insertBefore($template),
-      $option = $clone.find('[name="option[]"]');
-
-    // agregado de nuevo campo al formulario
-    $('#localStorageForm').formValidation('addField', $option);
+  .on('click', '.botonAgregarRespuesta',function(){
+    agregarCampoRespuesta("");
   })
 
   // Manejo del boton agregar respuesta
   .on('click', '.botonBorrarRespuesta', function() {
-    var $row = $(this).parents('.form-group'),
-      $option = $row.find('[name="option[]"]');
-
-    // Eliminar elemento conteniendo la opcion
-    $row.remove();
-
-    // Eliminar campo del formulario
-    $('#localStorageForm').formValidation('removeField', $option);
+    borrarCampoRespuesta(this);
   })
 
   // Llamada después de eliminar el campo
@@ -74,4 +58,29 @@ $('#localStorageForm')
       }
     }
   });
+}
+
+function agregarCampoRespuesta(textoRta){
+    var $template = $('#optionTemplate'),
+      $clone = $template
+      .clone()
+      .removeClass('hide')
+      .attr('id', "respuesta" + this.cantRespuestas)
+      .insertBefore($template),
+      $option = $clone.find('[name="option[]"]');
+      $option[0].value=textoRta;
+
+    // agregado de nuevo campo al formulario
+    $('#localStorageForm').formValidation('addField', $option);
+}
+
+function borrarCampoRespuesta(contexto){
+    var $row = $(contexto).parents('.form-group'),
+    $option = $row.find('[name="option[]"]');
+
+    // Eliminar elemento conteniendo la opcion
+    $row.remove();
+
+    // Eliminar campo del formulario
+    $('#localStorageForm').formValidation('removeField', $option);
 }

@@ -6,6 +6,8 @@ var VistaAdministrador = function(modelo, controlador, elementos) {
   this.controlador = controlador;
   this.elementos = elementos;
   var contexto = this;
+//  var modoEdicion = false;
+  var preguntaAEditar;
 
   // suscripción de observadores
   this.modelo.preguntaAgregada.suscribir(function() {
@@ -83,8 +85,10 @@ VistaAdministrador.prototype = {
           respuestas.push(rta);    
         }
       })
+      contexto.limpiarRespuestas();
       contexto.limpiarFormulario();
-      contexto.controlador.agregarPregunta(value, respuestas);
+
+      contexto.controlador.agregarPregunta(value, respuestas, );
     });
     //asociar el resto de los botones a eventos
 
@@ -99,26 +103,27 @@ VistaAdministrador.prototype = {
     });
 
     e.botonEditarPregunta.click(function(){
-      var idpregunta =  parseInt($('.list-group-item').attr('id'));
-
-      var preguntaElegida = modelo.preguntas.filter(function(preg){
-        return preg.id = idpregunta;
+      var idpregunta =  parseInt($('.list-group-item.active').attr('id'));
+      preguntaAEditar = modelo.preguntas.filter(function(preg){
+        return preg.id == idpregunta;
       });
-      var divRespuestas = $('#respuesta');
-
-      var nuevoItem; 
-      var respuestasElegidas = preguntaElegida[0].cantidadPorRespuesta;
-
-      e.pregunta.val = preguntaElegida[0].textoPregunta;
-
-      respuestasElegidas.forEach(rta => {
-        nuevoItem= $(`<input type="text" class="form-control" name="option[]" data-fv-field="option[]"> ${rta.textoRespuesta} </input>`);
-        divRespuestas.append(nuevoItem);
-      });
-
+      var respuestasElegidas = preguntaAEditar[0].cantidadPorRespuesta;
+      e.pregunta.val(preguntaAEditar[0].textoPregunta) ;
       
-
+      contexto.limpiarRespuestas();
+      respuestasElegidas.forEach(rta => {
+        agregarCampoRespuesta(rta.textoRespuesta);
+      });
+      // modoEdicion = true;
     });
+
+  },
+
+  limpiarRespuestas: function(){
+    var elementosRtas = $('.botonBorrarRespuesta:visible');
+    for(var i=0; i < elementosRtas.length; i++){
+      borrarCampoRespuesta(elementosRtas[i]);
+    }
   },
 
   limpiarFormulario: function(){
