@@ -24,8 +24,8 @@ Modelo.prototype = {
   },
 
   //se agrega una pregunta dado un nombre y sus respuestas
-  agregarPregunta: function(nombre, respuestas, idpregunta) {
-    var modo = idpregunta? 'edicion':'alta';
+  agregarPregunta: function(nombre, respuestas, idPreguntaAEditar) {
+    var modo = idPreguntaAEditar? 'edicion':'alta';
     if (modo == 'alta'){
       var id = this.obtenerUltimoId();
       id++;
@@ -34,8 +34,8 @@ Modelo.prototype = {
       this.guardar(nuevaPregunta);
     }
     else{
-      var preguntaModificada = {'textoPregunta': nombre, 'id': idpregunta, 'cantidadPorRespuesta': respuestas};
-      this.preguntas = this.preguntas.filter(x => x.id == idpregunta);
+      var preguntaModificada = {'textoPregunta': nombre, 'id': idPreguntaAEditar, 'cantidadPorRespuesta': respuestas};
+      this.preguntas = this.preguntas.filter(x => x.id != idPreguntaAEditar);
       this.preguntas.push(preguntaModificada);
       this.actualizar(preguntaModificada);
     }
@@ -49,7 +49,7 @@ Modelo.prototype = {
   },
 
   actualizar: function(pregunta){
-    myStorage.removeItem(id);
+    myStorage.removeItem(pregunta.id);
     myStorage.setItem(pregunta.id, JSON.stringify(pregunta));
   },
 

@@ -7,7 +7,7 @@ var VistaAdministrador = function(modelo, controlador, elementos) {
   this.elementos = elementos;
   var contexto = this;
 //  var modoEdicion = false;
-  var preguntaAEditar;
+  var preguntaAEditar= null;
 
   // suscripción de observadores
   this.modelo.preguntaAgregada.suscribir(function() {
@@ -74,6 +74,7 @@ VistaAdministrador.prototype = {
     e.botonAgregarPregunta.click(function() {
       var value = e.pregunta.val();
       var respuestas = [];
+      var idPreguntaAEditar = contexto.preguntaAEditar.length > 0? contexto.preguntaAEditar[0].id: null;
 
       $('[name="option[]"]').each(function(x) {
         //completar
@@ -87,8 +88,7 @@ VistaAdministrador.prototype = {
       })
       contexto.limpiarRespuestas();
       contexto.limpiarFormulario();
-
-      contexto.controlador.agregarPregunta(value, respuestas, );
+      contexto.controlador.agregarPregunta(value, respuestas, idPreguntaAEditar);
     });
     //asociar el resto de los botones a eventos
 
@@ -104,11 +104,11 @@ VistaAdministrador.prototype = {
 
     e.botonEditarPregunta.click(function(){
       var idpregunta =  parseInt($('.list-group-item.active').attr('id'));
-      preguntaAEditar = modelo.preguntas.filter(function(preg){
+      contexto.preguntaAEditar = modelo.preguntas.filter(function(preg){
         return preg.id == idpregunta;
       });
-      var respuestasElegidas = preguntaAEditar[0].cantidadPorRespuesta;
-      e.pregunta.val(preguntaAEditar[0].textoPregunta) ;
+      var respuestasElegidas = contexto.preguntaAEditar[0].cantidadPorRespuesta;
+      e.pregunta.val(contexto.preguntaAEditar[0].textoPregunta) ;
       
       contexto.limpiarRespuestas();
       respuestasElegidas.forEach(rta => {
