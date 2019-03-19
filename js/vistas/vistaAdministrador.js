@@ -74,7 +74,7 @@ VistaAdministrador.prototype = {
     e.botonAgregarPregunta.click(function() {
       var value = e.pregunta.val();
       var respuestas = [];
-      var idPreguntaAEditar = contexto.preguntaAEditar.length > 0? contexto.preguntaAEditar[0].id: null;
+      var idPreguntaAEditar = contexto.preguntaAEditar? contexto.preguntaAEditar[0].id: null;
 
       $('[name="option[]"]').each(function(x) {
         //completar

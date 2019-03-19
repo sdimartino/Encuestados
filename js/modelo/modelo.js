@@ -10,6 +10,7 @@ var Modelo = function() {
   this.preguntaBorrada = new Evento(this);
   this.todasPreguntasBorradas = new Evento(this);
   this.cargaLocalStorage = new Evento(this);
+  this.votosEnviados = new Event(this);
   // this.consultar();
 };
 
@@ -88,6 +89,12 @@ Modelo.prototype = {
     this.preguntas =[];
     this.borrarPregunta();
     this.todasPreguntasBorradas.notificar();
-  }
+  },
 
+  agregarVoto: function(idPregunta, respuestaSeleccionada){
+    var pregunta = this.preguntas.find(x => x.id == idPregunta);
+    pregunta.cantidadPorRespuesta.filter(x=> x.textoRespuesta === respuestaSeleccionada).forEach(x => x.cantidad++);
+    this.votosEnviados.notificar();
+  }
+  
 };

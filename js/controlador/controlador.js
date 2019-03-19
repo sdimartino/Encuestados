@@ -20,5 +20,10 @@ Controlador.prototype = {
 
   consultarPreguntas: function(){
     this.modelo.consultar();
+  },
+
+  agregarVoto: function(idPregunta,respuestaSeleccionada){
+    this.modelo.agregarVoto(idPregunta, respuestaSeleccionada);
   }
+
 };
