@@ -10,18 +10,22 @@ var VistaUsuario = function(modelo, controlador, elementos) {
   //suscripcion a eventos del modelo
   this.modelo.preguntaAgregada.suscribir(function() {
     contexto.reconstruirLista();
+    contexto.reconstruirGrafico();
   });
 
   this.modelo.preguntaBorrada.suscribir(function(){
       contexto.reconstruirLista();
+      contexto.reconstruirGrafico();
   });
 
   this.modelo.todasPreguntasBorradas.suscribir(function(){
     contexto.reconstruirLista();
+    contexto.reconstruirGrafico();
   });
   
   this.modelo.cargaLocalStorage.suscribir(function(){
     contexto.reconstruirLista();
+    contexto.reconstruirGrafico();
   });
 
   this.modelo.votosEnviados.suscribir(function(){
@@ -47,8 +51,11 @@ VistaUsuario.prototype = {
   //reconstruccion de los graficos de torta
   reconstruirGrafico: function(){
     var contexto = this;
-    //obtiene las preguntas del local storage
-    var preguntas = this.modelo.preguntas;
+    // //obtiene las preguntas del local storage
+    var preguntas = this.modelo.preguntas.filter(function(pregunta){
+      return pregunta.cantidadPorRespuesta.some(function(rta){return rta.cantidad > 0});
+    });
+
     preguntas.forEach(function(clave){
       var listaParaGrafico = [[clave.textoPregunta, 'Cantidad']];
       var respuestas = clave.cantidadPorRespuesta;
@@ -102,6 +109,7 @@ VistaUsuario.prototype = {
         var respuestaSeleccionada = $('input[name=' + id + ']:checked').val();
         $('input[name=' + id + ']').prop('checked',false);
         contexto.controlador.agregarVoto(id,respuestaSeleccionada);
+        $('#nombreUsuario').val("");
       });
   },
 
