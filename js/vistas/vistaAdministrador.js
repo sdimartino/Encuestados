@@ -6,7 +6,7 @@ var VistaAdministrador = function(modelo, controlador, elementos) {
   this.controlador = controlador;
   this.elementos = elementos;
   var contexto = this;
-//  var modoEdicion = false;
+  var cargaDatosOk = true;
   var preguntaAEditar= null;
 
   // suscripción de observadores
@@ -73,12 +73,15 @@ VistaAdministrador.prototype = {
     //asociacion de eventos a boton
     e.botonAgregarPregunta.click(function() {
       var value = e.pregunta.val();
+      if (!validaTextos("La pregunta no puede ser vacía",value)) return;
+      // agregado de nuevo campo al formulario
       var respuestas = [];
       var idPreguntaAEditar = contexto.preguntaAEditar? contexto.preguntaAEditar[0].id: null;
 
       $('[name="option[]"]').each(function(x) {
         //completar
-        if ( $(this).val() != ""){
+        var textoRespuesta = $(this).val();
+        if ( textoRespuesta != ""){
           var rta = {
             textoRespuesta : $(this).val(),
             cantidad: 0
@@ -86,12 +89,25 @@ VistaAdministrador.prototype = {
           respuestas.push(rta);    
         }
       })
-      contexto.limpiarRespuestas();
-      contexto.limpiarFormulario();
-      contexto.controlador.agregarPregunta(value, respuestas, idPreguntaAEditar);
+      if (respuestas.length == 0 ) {validaTextos("No puede haber opciones vacías","" ); return false;}
+      if (cargaDatosOk ){
+        contexto.limpiarRespuestas();
+        contexto.limpiarFormulario();
+        contexto.controlador.agregarPregunta(value, respuestas, idPreguntaAEditar);
+      }
     });
+    
+    function validaTextos(textoAEvaluar, valor){
+      if (!valor){
+        alert(textoAEvaluar);
+        cargaDatosOk=false;
+        return false
+      }
+      cargaDatosOk=true;
+      return true;
+    }
+    
     //asociar el resto de los botones a eventos
-
     e.botonBorrarPregunta.click(function() {
        var id = parseInt($('.list-group-item.active').attr('id'));
        contexto.controlador.borrarPregunta(id);  

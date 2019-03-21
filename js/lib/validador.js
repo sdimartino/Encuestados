@@ -7,7 +7,8 @@ $('#localStorageForm')
       invalid: 'glyphicon glyphicon-remove',
       validating: 'glyphicon glyphicon-refresh'
     },
-    fields: {
+    fields: 
+    {
       question: {
         validators: {
           notEmpty: {
@@ -36,6 +37,8 @@ $('#localStorageForm')
   .on('click', '.botonBorrarRespuesta', function() {
     borrarCampoRespuesta(this);
   })
+
+    
 
   // Llamada después de eliminar el campo
   .on('added.field.fv', function(e, data) {

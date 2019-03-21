@@ -66,8 +66,9 @@ Modelo.prototype = {
   },
   //borrar almacenamiento
   borrar: function(id){
-     if (!id && myStorage.length > 0){
-        for(var i=0; i <= myStorage.length ; i++){
+    var elemAlmacenados = myStorage.length ;
+    if (!id && elemAlmacenados > 0){
+        for(var i=0; i <= elemAlmacenados ; i++){
           myStorage.removeItem(myStorage.key(i));
         }
      }
