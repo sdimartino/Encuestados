@@ -34,6 +34,7 @@ VistaAdministrador.prototype = {
     this.reconstruirLista();
     this.configuracionDeBotones();
     validacionDeFormulario();
+    habilitarGuardado(false);
   },
 
   construirElementoPregunta: function(pregunta){
@@ -41,11 +42,8 @@ VistaAdministrador.prototype = {
     var nuevoItem;
     //completar
     //asignar a nuevoitem un elemento li con clase "list-group-item", id "pregunta.id" y texto "pregunta.textoPregunta"
-       
-    //nuevoItem = $("<li class='list-group-item' id='" + pregunta.id +"'>"+  pregunta.textoPregunta +"</li>");
     if (pregunta){
       nuevoItem = $(`<li class='list-group-item' id='${pregunta.id}'> ${pregunta.textoPregunta} </li>`);
-    
       var interiorItem  = $('.d-flex');
       var titulo = interiorItem.find('h5');
       titulo.text(pregunta.textoPregunta);
@@ -125,14 +123,12 @@ VistaAdministrador.prototype = {
       });
       var respuestasElegidas = contexto.preguntaAEditar[0].cantidadPorRespuesta;
       e.pregunta.val(contexto.preguntaAEditar[0].textoPregunta) ;
-      
       contexto.limpiarRespuestas();
       respuestasElegidas.forEach(rta => {
         agregarCampoRespuesta(rta.textoRespuesta);
       });
-      // modoEdicion = true;
+      habilitarGuardado(true);
     });
-
   },
 
   limpiarRespuestas: function(){

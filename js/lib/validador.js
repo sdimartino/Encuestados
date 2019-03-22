@@ -38,8 +38,6 @@ $('#localStorageForm')
     borrarCampoRespuesta(this);
   })
 
-    
-
   // Llamada después de eliminar el campo
   .on('added.field.fv', function(e, data) {
     // data.field   --> nombre del campo
@@ -60,7 +58,24 @@ $('#localStorageForm')
         $('#localStorageForm').find('.botonAgregarRespuesta').removeAttr('disabled');
       }
     }
-  });
+  })
+  //Validación final
+  .on("err.validator.fv", function(ev, data){
+    var formValido = data.fv.isValid();
+    console.log("err.validator.fv", formValido);
+    habilitarGuardado(formValido);
+  })
+  .on("success.validator.fv", (ev, data) => {
+    var formValido = data.fv.isValid();
+    console.log("success.validator.fv", formValido);
+    habilitarGuardado(formValido);
+    })
+  ;
+}
+
+function habilitarGuardado(valido){
+  var btnGuardar = $('#agregarPregunta');
+  if (valido != null) btnGuardar.prop('disabled', !valido);
 }
 
 function agregarCampoRespuesta(textoRta){

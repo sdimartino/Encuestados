@@ -11,7 +11,6 @@ var Modelo = function() {
   this.todasPreguntasBorradas = new Evento(this);
   this.cargaLocalStorage = new Evento(this);
   this.votosEnviados = new Evento(this);
-  // this.consultar();
 };
 
 Modelo.prototype = {
@@ -40,7 +39,6 @@ Modelo.prototype = {
       this.preguntas.push(preguntaModificada);
       this.actualizar(preguntaModificada);
     }
-    
     this.preguntaAgregada.notificar();
   },
 
@@ -68,9 +66,7 @@ Modelo.prototype = {
   borrar: function(id){
     var elemAlmacenados = myStorage.length ;
     if (!id && elemAlmacenados > 0){
-        for(var i=0; i <= elemAlmacenados ; i++){
-          myStorage.removeItem(myStorage.key(i));
-        }
+        myStorage.clear();
      }
      else{
         myStorage.removeItem(id);
